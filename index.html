@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Random Domain Generator</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    #output { margin-top: 20px; }
+    button { padding: 10px 20px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Random Domain Generator</h1>
+  <p>Click the button to generate three random domains:</p>
+  <button onclick="generateDomains()">Generate Domains</button>
+  <div id="output"></div>
+
+  <script>
+    function generateDomains() {
+      // Replace this URL with your hosted JSON file's raw URL
+      const jsonUrl = 'https://raw.githubusercontent.com/devdrift80/supreme-octo-potato/refs/heads/main/domains.json';
+
+      fetch(jsonUrl)
+        .then(response => response.json())
+        .then(data => {
+          const domains = data.domains;
+          // Shuffle the array using Fisher-Yates algorithm
+          for (let i = domains.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [domains[i], domains[j]] = [domains[j], domains[i]];
+          }
+          // Select the first three domains
+          const selectedDomains = domains.slice(0, 3);
+          // Display the results
+          document.getElementById('output').innerHTML = `
+            <p><strong>Button 1:</strong> ${selectedDomains[0]}</p>
+            <p><strong>Button 2:</strong> ${selectedDomains[1]}</p>
+            <p><strong>Button 3:</strong> ${selectedDomains[2]}</p>
+          `;
+        })
+        .catch(error => {
+          document.getElementById('output').innerHTML = 
+            `<p>Error fetching domains: ${error.message}</p>`;
+        });
+    }
+  </script>
+</body>
+</html>
